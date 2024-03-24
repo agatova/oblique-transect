@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Coordinates Generator</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: radial-gradient(circle, rgba(0,0,255,1) 0%, rgba(0,255,0,1) 100%);
+  }
+  #map {
+    width: 100%;
+    height: 400px;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+<h1>Random Coordinates Generator</h1>
+<div id="map"></div>
+<button onclick="generateCoordinates()">Generate Coordinates</button>
+<p id="coordinates"></p>
+
+<script>
+function generateCoordinates() {
+  // Center point coordinates
+  const centerLat = 55.29980816129063;
+  const centerLng = 20.986541435322117;
+  // Earth's radius in kilometers
+  const earthRadius = 6371;
+
+  // Generate random angle (in radians) for distance and direction
+  const distance = Math.sqrt(Math.random()) * 1; // Generate random distance within 1km
+  const direction = Math.random() * 2 * Math.PI; // Generate random direction in radians
+
+  // Calculate new latitude and longitude
+  const deltaLat = distance / earthRadius * (180 / Math.PI); // Convert radians to degrees
+  const deltaLng = (distance / earthRadius) / Math.cos(centerLat * Math.PI / 180) * (180 / Math.PI); // Convert radians to degrees
+
+  const newLat = centerLat + deltaLat * Math.cos(direction);
+  const newLng = centerLng + deltaLng * Math.sin(direction);
+
+  // Display coordinates
+  document.getElementById("coordinates").innerHTML = `${newLat.toFixed(6)}, ${newLng.toFixed(6)}`;
+
+  // Display generated coordinates on map
+  const map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: centerLat, lng: centerLng},
+    zoom: 15
+  });
+  const marker = new google.maps.Marker({
+    position: {lat: newLat, lng: newLng},
+    map: map
+  });
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4fW2QAwNR53PfVH4WOakcISt9wiiDWkI&callback=initMap" async defer></script>
+<!-- Replace YOUR_API_KEY with your Google Maps API key -->
+</body>
+</html>
+
